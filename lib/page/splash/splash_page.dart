@@ -19,7 +19,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
       if (status == AnimationStatus.completed) {
         print('动画结束');
         
-        Navigator.pushNamed(context, Routes.navigationBarPageView);
+        Navigator.pushNamed(context, Routes.navigationBarPage);
         
         
         }

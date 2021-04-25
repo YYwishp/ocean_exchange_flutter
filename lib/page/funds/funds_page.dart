@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:ocean_exchange_flutter/common/routes/routes.dart';
 import 'package:ocean_exchange_flutter/common/utils/storage.dart';
 
 class FundsPages extends StatefulWidget {
@@ -33,9 +34,11 @@ class _FundsPagesState extends State<FundsPages>
 
           ElevatedButton(
             onPressed: () {
-              getUserInfo();
+              // getUserInfo();
+
+              login();
             },
-            child: Text('获取数据'),
+            child: Text('登录'),
           ),
           ElevatedButton(
             onPressed: () {
@@ -67,4 +70,18 @@ class _FundsPagesState extends State<FundsPages>
 
     print('是否存储成功 $bool');
   }
+
+  void login() {
+
+
+    Navigator.pushNamed(context, Routes.loginPage);
+
+
+  }
+
+
+
+
+
+
 }

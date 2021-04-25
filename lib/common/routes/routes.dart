@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ocean_exchange_flutter/page/login/login.dart';
 import 'package:ocean_exchange_flutter/page/navigation/NavigationBarPageView.dart';
 import 'package:ocean_exchange_flutter/page/splash/splash_page.dart';
 
@@ -6,7 +7,8 @@ import 'package:ocean_exchange_flutter/page/splash/splash_page.dart';
 
 class Routes{
   static const splash = '/';
-  static const navigationBarPageView = '/navigationBarPageView';
+  static const navigationBarPage = '/navigationBarPage';
+  static const loginPage = '/loginPage';
 
 }
 
@@ -15,7 +17,12 @@ final _routes = {
   //key 名字：value
   //初始化记载的路由 ,不需要传值，就不配置 arguments
   Routes.splash: (context) => SplashPage(),
-  Routes.navigationBarPageView: (context) => NavigationBarPageView(),
+  Routes.navigationBarPage: (context) => NavigationBarPageView(),
+  Routes.loginPage: (context) => LoginPage(),
+
+
+
+
   /*'/form': (context, {arguments}) => FormPage(title: '我是数据'),
   '/search': (context, {arguments}) => SearchPage(arguments: arguments),
   '/product': (context, {arguments}) => ProductPage(arguments: arguments),
