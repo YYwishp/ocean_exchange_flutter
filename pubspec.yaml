@@ -31,16 +31,22 @@ dependencies:
 
   #  动画
   lottie: ^1.0.1
-
   #  存储
   shared_preferences: ^2.0.5
+  #  Dart常用工具类库。包含日期，正则，倒计时，时间轴等工具类
+  common_utils: ^2.0.2
+  #  提供更多的工具类，例如SpUtil，ScreenUtil, DirectoryUtil等等
+  flustars: ^2.0.1
+  #  网络
+  dio: ^4.0.0
+  cookie_jar: ^3.0.1
+  dio_cookie_manager: ^2.0.0
+  # 提示 toast
+  fluttertoast: ^8.0.6
 
 
-
-
-
-
-
+  # 屏幕适配
+  flutter_screenutil: ^5.0.0
 
 
 dev_dependencies:

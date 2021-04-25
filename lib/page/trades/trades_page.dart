@@ -6,8 +6,22 @@ class TradesPage extends StatefulWidget {
 }
 
 class _TradesPageState extends State<TradesPage> with AutomaticKeepAliveClientMixin{
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    print('_TradesPageState initState');
+  }
+
+
   @override
   Widget build(BuildContext context) {
+
+    print('_TradesPageState build');
+
+
     return Container(
       child: Text('交易界面'),
     );

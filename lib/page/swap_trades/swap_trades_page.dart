@@ -5,9 +5,26 @@ class SwapTradesPage extends StatefulWidget {
   _SwapTradesPageState createState() => _SwapTradesPageState();
 }
 
-class _SwapTradesPageState extends State<SwapTradesPage> with AutomaticKeepAliveClientMixin{
+class _SwapTradesPageState extends State<SwapTradesPage>
+    with AutomaticKeepAliveClientMixin {
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    print('_SwapTradesPageState initState');
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
+
+
+    print('_SwapTradesPageState build');
+
+
     return Container(
       child: Text('合约界面'),
     );
@@ -15,5 +32,4 @@ class _SwapTradesPageState extends State<SwapTradesPage> with AutomaticKeepAlive
 
   @override
   bool get wantKeepAlive => true;
-
 }

@@ -6,8 +6,25 @@ class MarketsPage extends StatefulWidget {
 }
 
 class _MarketsPageState extends State<MarketsPage>with AutomaticKeepAliveClientMixin  {
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    print('_MarketsPageState initState');
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
+
+    print('_MarketsPageState build');
+
+
+
+
     return Container(
       child: Text('行情页面'),
     );
