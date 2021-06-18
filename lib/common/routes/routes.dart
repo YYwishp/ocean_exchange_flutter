@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ocean_exchange_flutter/page/login/login.dart';
+import 'package:ocean_exchange_flutter/page/login/captcha/captcha_page.dart';
+import 'package:ocean_exchange_flutter/page/login/login_page.dart';
 import 'package:ocean_exchange_flutter/page/navigation/NavigationBarPageView.dart';
 import 'package:ocean_exchange_flutter/page/splash/splash_page.dart';
 
@@ -9,6 +10,7 @@ class Routes{
   static const splash = '/';
   static const navigationBarPage = '/navigationBarPage';
   static const loginPage = '/loginPage';
+  static const captchaPage = '/captchaPage';
 
 }
 
@@ -19,6 +21,7 @@ final _routes = {
   Routes.splash: (context) => SplashPage(),
   Routes.navigationBarPage: (context) => NavigationBarPageView(),
   Routes.loginPage: (context) => LoginPage(),
+  Routes.captchaPage: (context,{arguments}) => CaptchaPage(arguments: arguments,),
 
 
 

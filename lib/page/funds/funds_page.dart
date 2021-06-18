@@ -2,7 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:ocean_exchange_flutter/common/routes/routes.dart';
 import 'package:ocean_exchange_flutter/common/utils/storage.dart';
+import 'package:flutter_web_plugin/flutter_web_plugin.dart';
 
+/**
+ * 资产页面
+ */
 class FundsPages extends StatefulWidget {
   @override
   _FundsPagesState createState() => _FundsPagesState();
@@ -48,8 +52,9 @@ class _FundsPagesState extends State<FundsPages>
           ),
           ElevatedButton(
             onPressed: () {
-              var a = str ?? 123;
+              var a = str;
               print('$a');
+              showToast();
             },
             child: Text('测试'),
           ),
@@ -66,9 +71,14 @@ class _FundsPagesState extends State<FundsPages>
   }
 
   void setUserInfo() async {
-    var bool = await StorageUtil().savePreference('userInfo', "qqqwwee");
+    // var bool = await StorageUtil().savePreference('userInfo', "qqqwwee");
+    //
+    // print('是否存储成功 $bool');
 
-    print('是否存储成功 $bool');
+
+    Navigator.pushNamed(context, Routes.captchaPage,arguments: {'type':'tencent'});
+
+
   }
 
   void login() {
@@ -79,7 +89,10 @@ class _FundsPagesState extends State<FundsPages>
 
   }
 
-
+  showToast()async{
+    String formNativeMsg = await FlutterWebPlugin.showToast(' 00000 ');
+    print('$formNativeMsg');
+  }
 
 
 

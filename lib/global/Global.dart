@@ -1,15 +1,13 @@
+import 'package:ocean_exchange_flutter/common/utils/HttpUtil.dart';
 import 'package:ocean_exchange_flutter/common/utils/storage.dart';
+import 'package:ocean_exchange_flutter/global/constants.dart';
 
-import 'common/bean/user.dart';
 
 /// 全局配置
 class Global {
 
 
-  /// 用户配置
-  static UserLoginResponseEntity profile = UserLoginResponseEntity(
-    accessToken: null, channels: [],
-  );
+
 
 
 
@@ -26,5 +24,15 @@ class Global {
 
     // 工具初始
     await StorageUtil().init();
+
+    Constants.configUUID();
+
+    HttpUtil().init();
+
+
+
+
+
+
   }
 }

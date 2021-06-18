@@ -115,6 +115,7 @@ class _NavigationBarPageViewState extends State<NavigationBarPageView> {
         itemBuilder: (context, index) {
           return _pages[index];
         },
+        //禁用滑动
         physics: NeverScrollableScrollPhysics(),
         // physics: BouncingScrollPhysics(),
         controller: _pageController,

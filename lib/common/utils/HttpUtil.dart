@@ -1,15 +1,17 @@
 import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
+import 'package:device_info/device_info.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:ocean_exchange_flutter/global/constants.dart';
 import 'package:ocean_exchange_flutter/widget/toast.dart';
+import 'package:package_info/package_info.dart';
 
-import '../../global.dart';
-import 'api.dart';
-import 'values/proxy.dart';
+import '../../global/Global.dart';
+import 'OceanApi.dart';
 
 class HttpUtil {
   static HttpUtil _instance = HttpUtil._internal();
@@ -19,75 +21,95 @@ class HttpUtil {
   CancelToken cancelToken = new CancelToken();
   late Dio dio;
 
-  HttpUtil._internal() {
-    // BaseOptions、Options、RequestOptions 都可以配置参数，优先级别依次递增，且可以根据优先级别覆盖参数
-    BaseOptions options = BaseOptions(
-      // 请求基地址,可以包含子路径
-      baseUrl: SERVER_API_URL,
+  HttpUtil._internal();
 
-      //连接服务器超时时间，单位是毫秒.
-      connectTimeout: 10000,
+  ///
+  /// 第一步： 初始化，
+  ///
+  init() {
+    getUserAgent().then((value) {
+      // BaseOptions、Options、RequestOptions 都可以配置参数，优先级别依次递增，且可以根据优先级别覆盖参数
+      BaseOptions options = BaseOptions(
+        // 请求基地址,可以包含子路径
+        baseUrl: getServerApiHost(),
 
-      // 响应流上前后两次接受到数据的间隔，单位为毫秒。
-      receiveTimeout: 5000,
+        //连接服务器超时时间，单位是毫秒.
+        connectTimeout: 10000,
 
-      // Http请求头.
-      headers: {},
+        // 响应流上前后两次接受到数据的间隔，单位为毫秒。
+        receiveTimeout: 5000,
 
-      /// 请求的Content-Type，默认值是"application/json; charset=utf-8".
-      /// 如果您想以"application/x-www-form-urlencoded"格式编码请求数据,
-      /// 可以设置此选项为 `Headers.formUrlEncodedContentType`,  这样[Dio]
-      /// 就会自动编码请求体.
-      contentType: 'application/json; charset=utf-8',
+        // Http请求头.
+        headers: {
+          "Accept-Language": LANG,
+          "platform": PLATFORM,
+          "user-agent": value,
+        },
 
-      /// [responseType] 表示期望以那种格式(方式)接受响应数据。
-      /// 目前 [ResponseType] 接受三种类型 `JSON`, `STREAM`, `PLAIN`.
-      ///
-      /// 默认值是 `JSON`, 当响应头中content-type为"application/json"时，dio 会自动将响应内容转化为json对象。
-      /// 如果想以二进制方式接受响应数据，如下载一个二进制文件，那么可以使用 `STREAM`.
-      ///
-      /// 如果想以文本(字符串)格式接收响应数据，请使用 `PLAIN`.
-      responseType: ResponseType.json,
-    );
+        /// 请求的Content-Type，默认值是"application/json; charset=utf-8".
+        /// 如果您想以"application/x-www-form-urlencoded"格式编码请求数据,
+        /// 可以设置此选项为 `Headers.formUrlEncodedContentType`,  这样[Dio]
+        /// 就会自动编码请求体.
+        // contentType: 'application/json; charset=utf-8',
+        // contentType: 'application/x-www-form-urlencoded',
+        contentType: "application/x-www-form-urlencoded",
 
-    dio = new Dio(options);
+        /// [responseType] 表示期望以那种格式(方式)接受响应数据。
+        /// 目前 [ResponseType] 接受三种类型 `JSON`, `STREAM`, `PLAIN`.
+        ///
+        /// 默认值是 `JSON`, 当响应头中content-type为"application/json"时，dio 会自动将响应内容转化为json对象。
+        /// 如果想以二进制方式接受响应数据，如下载一个二进制文件，那么可以使用 `STREAM`.
+        ///
+        /// 如果想以文本(字符串)格式接收响应数据，请使用 `PLAIN`.
+        responseType: ResponseType.json,
+      );
 
-    // Cookie管理
-    CookieJar cookieJar = CookieJar();
-    dio.interceptors.add(CookieManager(cookieJar));
+      dio = new Dio(options);
 
-    // 添加拦截器
-    dio.interceptors.add(InterceptorsWrapper(
-      onRequest: (options, handler) {
-        return handler.next(options);
-      },
-      onResponse: (e, handler) {
-        return handler.next(e);
-      },
-      onError: (e, handler) {
-        ErrorEntity eInfo = createErrorEntity(e);
-        // 错误提示
-        toastInfo(msg: eInfo.message);
+      // Cookie管理
+      CookieJar cookieJar = CookieJar();
+      // dio.interceptors.add(CookieManager(cookieJar));
 
-        // 错误交互处理
-        var context = e.requestOptions.extra['context'];
-        if (context != null) {
-          switch (eInfo.code) {
-            case 401: // 没有权限 重新登录
-              // goLoginPage(context);
-              break;
-            default:
-          }
-        }
+      // 添加拦截器
+      dio.interceptors.add(
+        InterceptorsWrapper(
+          onRequest: (options, handler) {
+            return handler.next(options);
+          },
+          onResponse: (e, handler) {
+            return handler.next(e);
+          },
+          onError: (e, handler) {
+            ErrorEntity eInfo = createErrorEntity(e);
+            // 错误提示
+            toastInfo(msg: eInfo.message);
 
-        return handler.next(e);
-      },
-    ));
-    // 加内存缓存
-    // dio.interceptors.add(NetCache());
+            // 错误交互处理
+            var context = e.requestOptions.extra['context'];
+            if (context != null) {
+              switch (eInfo.code) {
+                case 401: // 没有权限 重新登录
+                  // goLoginPage(context);
 
-    // 在调试模式下需要抓包调试，所以我们使用代理，并禁用HTTPS证书校验
-    if (!Global.isRelease && PROXY_ENABLE) {
+                  print('==== 401 ====');
+                  break;
+                default:
+              }
+            }
+
+            return handler.next(e);
+          },
+        ),
+      );
+      // 日志拦截器
+      dio.interceptors.add(LogInterceptor());
+
+
+      // 加内存缓存
+      // dio.interceptors.add(NetCache());
+
+      // 在调试模式下需要抓包调试，所以我们使用代理，并禁用HTTPS证书校验
+      /*if (!Global.isRelease && PROXY_ENABLE) {
       (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
           (client) {
         client.findProxy = (uri) {
@@ -97,7 +119,47 @@ class HttpUtil {
         client.badCertificateCallback =
             (X509Certificate cert, String host, int port) => true;
       };
+    }*/
+
+      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+          (client) {
+        client.badCertificateCallback = (cert, host, port) {
+          return true;
+        };
+      };
+    });
+  }
+
+  Future<String> getUserAgent() async {
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+
+    String appName = packageInfo.appName;
+    String packageName = packageInfo.packageName;
+    String version = packageInfo.version;
+    String buildNumber = packageInfo.buildNumber;
+
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+
+    String plantInfo;
+    String brand;
+    String model;
+
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+
+      plantInfo = "Android ${androidInfo.version.release}";
+      brand = androidInfo.brand;
+      model = androidInfo.model;
+    } else {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+
+      plantInfo = "${iosInfo.systemName} ${iosInfo.systemVersion}";
+
+      brand = 'apple';
+      model = iosInfo.model;
     }
+
+    return "OceanEx/$version ($packageName;build:$buildNumber;$plantInfo;${Constants.DEVICE_ID};$brand,$model) dio/4.0.0";
   }
 
   /*
@@ -208,17 +270,17 @@ class HttpUtil {
     token.cancel("cancelled");
   }
 
-  /// 读取本地配置
-  Map<String, dynamic> getAuthorizationHeader() {
-    var headers;
-    String? accessToken = Global.profile.accessToken;
-    if (accessToken != null) {
-      headers = {
-        'Authorization': 'Bearer $accessToken',
-      };
-    }
-    return headers;
-  }
+  // /// 读取本地配置
+  // Map<String, dynamic> getAuthorizationHeader() {
+  //   var headers;
+  //   String? accessToken = Global.profile.accessToken;
+  //   if (accessToken != null) {
+  //     headers = {
+  //       'Authorization': 'Bearer $accessToken',
+  //     };
+  //   }
+  //   return headers;
+  // }
 
   /// restful get 操作
   /// refresh 是否下拉刷新 默认 false
@@ -268,15 +330,15 @@ class HttpUtil {
       },
     );
 
-    Map<String, dynamic> _authorization = getAuthorizationHeader();
-    if (_authorization != null) {
-      requestOptions = requestOptions.copyWith(headers: _authorization);
-    }
+    // Map<String, dynamic> _authorization = getAuthorizationHeader();
+    // if (_authorization != null) {
+    //   requestOptions = requestOptions.copyWith(headers: _authorization);
+    // }
 
     var response = await dio.post(
       path,
       data: params,
-      options: requestOptions,
+      // options: requestOptions,
       cancelToken: cancelToken,
     );
     return response.data;

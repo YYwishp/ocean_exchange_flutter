@@ -1,29 +1,27 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'common/routes/routes.dart';
-import 'global.dart';
+import 'global/Global.dart';
 
 Future<Null> main() async {
+  //WidgetsFlutterBinding是框架和flutter引擎之间的胶水
+  WidgetsFlutterBinding.ensureInitialized();
 
-    //WidgetsFlutterBinding是框架和flutter引擎之间的胶水
-    WidgetsFlutterBinding.ensureInitialized();
+  await Global.init();
 
-    await Global.init();
-
-    runApp(MyApp());
-
-
-
-
-
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
+
     return MaterialApp(
+
       //去掉 debug 的图标
       debugShowCheckedModeBanner: false,
 
@@ -32,5 +30,7 @@ class MyApp extends StatelessWidget {
       //抽离route
       onGenerateRoute: onGenerateRoute,
     );
+
+
   }
 }
