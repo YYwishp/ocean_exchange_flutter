@@ -84,15 +84,15 @@ class FlutterWebPlugin : FlutterPlugin, MethodCallHandler {
 				Log.e("EVENT_CHANNEL", "插件 初始化")
 				eventSink = events
 
-
-				Handler().postDelayed({
-					// 3,eventSink发送事件通知
-					eventSink?.success("我是原生 传递 的信息")
-					// 4,通知结束时调用event#endOfStream，此时onCancel会被调用
-					//eventSink?.endOfStream()
-					// 5,必要时，可通过evnetSink#error发送错误通知，flutter的StreamSubscription#onError会收到通知
-					//eventSink?.error("error code", "error message","error details")
-				}, 4000)
+				//=== 测试用
+				//Handler().postDelayed({
+				//	// 3,eventSink发送事件通知
+				//	eventSink?.success("我是原生 传递 的信息")
+				//	// 4,通知结束时调用event#endOfStream，此时onCancel会被调用
+				//	//eventSink?.endOfStream()
+				//	// 5,必要时，可通过evnetSink#error发送错误通知，flutter的StreamSubscription#onError会收到通知
+				//	//eventSink?.error("error code", "error message","error details")
+				//}, 4000)
 			}
 
 			override fun onCancel(arguments: Any?) {

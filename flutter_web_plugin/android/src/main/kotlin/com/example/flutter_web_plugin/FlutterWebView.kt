@@ -101,7 +101,7 @@ class FlutterWebView() : PlatformView, MethodChannel.MethodCallHandler {
 			}
 			"google" -> {
 				val ticket = json.optString("ticket", "")
-				var map = mapOf("randStr" to "", "ticket" to ticket)
+				var map = mapOf("randStr" to "null", "ticket" to ticket)
 				Log.e("google 数据", "9999${Thread.currentThread().name}--${map.toString()}")
 
 
