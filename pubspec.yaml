@@ -23,6 +23,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  #  国际化
+  flutter_localizations:
+    sdk: flutter
 
   flutter_web_plugin:
 
@@ -36,29 +39,59 @@ dependencies:
 
   #  动画
   lottie: ^1.0.1
+
   #  存储
   shared_preferences: ^2.0.5
+
   #  Dart常用工具类库。包含日期，正则，倒计时，时间轴等工具类
   common_utils: ^2.0.2
+
   #  提供更多的工具类，例如SpUtil，ScreenUtil, DirectoryUtil等等
   flustars: ^2.0.1
+
   #  网络
   dio: ^4.0.0
   cookie_jar: ^3.0.1
   dio_cookie_manager: ^2.0.0
+
   # 提示 toast
   fluttertoast: ^8.0.6
+
   # 屏幕适配
   flutter_screenutil: ^5.0.0
+
   # uuid
   uuid: ^3.0.4
+
   # 获取APP的信息：
   package_info: ^2.0.0
+
   # 设备信息
   device_info: ^2.0.0
 
   # webview_
   webview_flutter: ^2.0.8
+
+  # loading
+  flutter_easyloading: ^3.0.0
+
+  # provider
+  provider: ^5.0.0
+
+  #  Extension包  https://pub.dev/packages/dartx/install
+  dartx: ^0.7.1
+
+  # 获取当前设备信息 https://github.com/fluttercommunity/plus_plugins/tree/main/packages/device_info_plus
+  device_info_plus: 2.0.1
+
+  #  svg 显示
+  flutter_svg: ^0.22.0
+
+  #  刷新组件
+  pull_to_refresh: ^2.0.0
+
+  rational: ^1.2.1
+  decimal: ^1.2.0
 
 
 dev_dependencies:
@@ -84,6 +117,8 @@ flutter:
     - assets/images/
     - assets/images/2.0x/
     - assets/images/3.0x/
+    - assets/images/day/
+    - assets/images/night/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -111,3 +146,22 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+  fonts:
+    - family: Condensed
+      fonts:
+        - asset: assets/fonts/RobotoCondensed-Regular.ttf
+        - asset: assets/fonts/RobotoCondensed-Bold.ttf
+          weight: 400
+#    - family: RobotoCondensed
+#      fonts:
+#        - asset: assets/fonts/RobotoCondensed-Bold.ttf
+#            weight: 700
+
+
+
+
+
+
+flutter_intl:
+  enabled: true

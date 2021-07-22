@@ -1,0 +1,20 @@
+{
+  "changeDarkMode": "切换深/浅色模式",
+  "changeLanguage": "切换语言",
+
+  "darkMode": "深色模式",
+  "lightMode": "浅色模式",
+  "automatic": "跟随系统",
+
+  "test": "语言测试",
+  "test2": "你有 {count} 条消息",
+
+  "home": "首页",
+  "markets": "行情",
+  "trades": "交易",
+  "contract": "合约",
+  "funds": "资产",
+  "login_successfully": "登录成功"
+
+
+}

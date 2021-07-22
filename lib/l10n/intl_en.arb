@@ -1,0 +1,21 @@
+{
+  "changeDarkMode": "Light/Dark Mode",
+  "changeLanguage": "Change Language",
+
+  "darkMode": "Dark Mode",
+  "lightMode": "Light Mode",
+  "automatic": "Auto",
+
+  "test": "This is a language test",
+  "test2": "you have {count} messages",
+
+  "home": "Home",
+  "markets": "Markets",
+  "trades": "Trades",
+  "contract": "Contract",
+  "funds": "Funds",
+  "login_successfully": "Log in successfully."
+
+
+
+}

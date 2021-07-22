@@ -1,22 +1,22 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of '../login_response.dart';
+part of '../legal_tenders_entity.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-LoginResponse _$LoginResponseFromJson(Map<String, dynamic> json) {
-  return LoginResponse(
+LegalTendersEntity _$LegalTendersEntityFromJson(Map<String, dynamic> json) {
+  return LegalTendersEntity(
     code: json['code'] as int?,
     message: json['message'] as String?,
-    data: json['data'] == null
-        ? null
-        : Data.fromJson(json['data'] as Map<String, dynamic>),
+    data: (json['data'] as List<dynamic>?)
+        ?.map((e) => Data.fromJson(Map<String, String>.from(e as Map)))
+        .toList(),
   );
 }
 
-Map<String, dynamic> _$LoginResponseToJson(LoginResponse instance) =>
+Map<String, dynamic> _$LegalTendersEntityToJson(LegalTendersEntity instance) =>
     <String, dynamic>{
       'code': instance.code,
       'message': instance.message,
@@ -25,14 +25,12 @@ Map<String, dynamic> _$LoginResponseToJson(LoginResponse instance) =>
 
 Data _$DataFromJson(Map<String, dynamic> json) {
   return Data(
-    token: json['token'] as String?,
-    i18n: json['i18n'] as String?,
-    lockRemainingCount: json['lock_remaining_count'] as int?,
+    code: json['code'] as String?,
+    rate: json['rate'] as String?,
   );
 }
 
 Map<String, dynamic> _$DataToJson(Data instance) => <String, dynamic>{
-      'token': instance.token,
-      'i18n': instance.i18n,
-      'lock_remaining_count': instance.lockRemainingCount,
+      'code': instance.code,
+      'rate': instance.rate,
     };

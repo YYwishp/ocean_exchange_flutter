@@ -1,20 +1,31 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:ocean_exchange_flutter/common/model/list_bean.dart';
-import 'package:ocean_exchange_flutter/common/model/login_response.dart';
-import 'package:ocean_exchange_flutter/common/routes/routes.dart';
-import 'package:ocean_exchange_flutter/common/utils/OceanApi.dart';
-import 'package:ocean_exchange_flutter/global/constants.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart' as flutter_screenutil;
+import 'package:ocean_exchange_flutter/net/OceanApi.dart';
+import 'package:ocean_exchange_flutter/generated/l10n.dart';
+import 'package:ocean_exchange_flutter/global/url_constant.dart';
+import 'package:ocean_exchange_flutter/res/colors.dart';
+import 'package:ocean_exchange_flutter/res/constant.dart';
+import 'package:ocean_exchange_flutter/routes/routes.dart';
+import 'package:ocean_exchange_flutter/widget/toast.dart';
+import 'package:ocean_exchange_flutter/common/utils/theme_utils.dart';
 
+///
+/// 登录界面
+///
+///
+///
 class LoginPage extends StatefulWidget {
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage>
-    with SingleTickerProviderStateMixin {
+class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   late TextEditingController _userPasswordController;
@@ -31,9 +42,9 @@ class _LoginPageState extends State<LoginPage>
       vsync: this,
     );
 
-    _userPasswordController = TextEditingController();
+    _userPasswordController = TextEditingController(text: 'Gyx12345678');
 
-    _userEmailController = TextEditingController();
+    _userEmailController = TextEditingController(text: 'yywishp@gmail.com');
   }
 
   ///生命周期函数
@@ -75,16 +86,16 @@ class _LoginPageState extends State<LoginPage>
             Navigator.of(context).pop();
           },
         ),
-        backgroundColor: Color(0xff101418),
+        // backgroundColor: Color(0xff101418),
         //状态栏 文字颜色 For example, the color might be dark grey, requiring white text.
-        brightness: Brightness.dark,
+        // brightness: Brightness.dark,
       ),
       body: SingleChildScrollView(
         child: Container(
           width: double.infinity,
-          height: ScreenUtil().screenHeight,
+          height: flutter_screenutil.ScreenUtil().screenHeight,
           //背景色
-          color: Color(0xff101418),
+          // color: Color(0xff101418),
           child: Column(
             children: <Widget>[
               Container(
@@ -95,7 +106,7 @@ class _LoginPageState extends State<LoginPage>
                   textAlign: TextAlign.start,
                   style: TextStyle(
                     // backgroundColor: Colors.blueAccent,
-                    color: Colors.white,
+                    // color: Colors.white,
                     fontSize: 30,
                   ),
                 ),
@@ -109,7 +120,7 @@ class _LoginPageState extends State<LoginPage>
                   indicatorColor: Color(0xff0074ff),
                   labelColor: Color(0xff0074ff),
                   labelPadding: EdgeInsets.fromLTRB(10, 10, 10, 10),
-                  unselectedLabelColor: Colors.white,
+                  unselectedLabelColor: context.isDark ? Colours.dark_text : Colors.black,
                   //指示器 厚度
                   indicatorWeight: 1,
                   //指示器与文字等宽
@@ -138,9 +149,16 @@ class _LoginPageState extends State<LoginPage>
                         //邮箱
                         Container(
                           child: TextFormField(
-                            style: TextStyle(color: Colors.white),
+                            style: TextStyle(
+                              color: context.isDark ? Colors.white : Colors.black,
+                            ),
 
                             controller: _userEmailController,
+
+                            onChanged: (value) {
+                              // _userEmailController.text = value;
+                            },
+
                             //输入模式，邮件
                             keyboardType: TextInputType.emailAddress,
                             // controller: _userPasswordController,
@@ -198,13 +216,23 @@ class _LoginPageState extends State<LoginPage>
                         //密码
                         Container(
                           child: TextFormField(
-                            style: TextStyle(color: Colors.white),
+                            // 正则 开头大写，8到20个字符
+                            // inputFormatters: [
+                            //   WhitelistingTextInputFormatter(RegExp("[a-zA-Z]{8,20}\$"))
+                            // ],
+                            style: TextStyle(color: context.isDark ? Colors.white : Colors.black),
                             controller: _userPasswordController,
+
                             //输入模式，邮件
-                            keyboardType: TextInputType.text,
+                            keyboardType: TextInputType.emailAddress,
                             // controller: _userPasswordController,
                             //输入内容，隐藏
                             obscureText: passwordVisible,
+
+                            onChanged: (value) {
+                              // _userPasswordController.text = value;
+                            },
+
                             decoration: InputDecoration(
                               //内容文字的 内部填充/边距
                               contentPadding: EdgeInsets.symmetric(
@@ -215,13 +243,14 @@ class _LoginPageState extends State<LoginPage>
                               // border: OutlineInputBorder(
                               //   borderSide: BorderSide(color: Colors.red)
                               // ),
-                              //未选中时候的颜色
+                              //光标未选中时，边框的颜色
                               enabledBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Color(0xff222529),
+                                  // color: Colors.red,
                                 ),
                               ),
-                              //选中时外边框颜色
+                              //光标选中时，外边框颜色
                               focusedBorder: OutlineInputBorder(
                                 borderSide: BorderSide(
                                   color: Color(0xff42495b),
@@ -236,13 +265,11 @@ class _LoginPageState extends State<LoginPage>
                               ),
 
                               // enabledBorder: ,
-                              //下面是重点
+                              //位于输入框后面的图片,例如一般输入框后面会有个眼睛，控制输入内容是否明文
                               suffixIcon: IconButton(
                                 icon: Icon(
                                   //根据passwordVisible状态显示不同的图标
-                                  passwordVisible
-                                      ? Icons.visibility
-                                      : Icons.visibility_off,
+                                  passwordVisible ? Icons.visibility : Icons.visibility_off,
                                   color: Colors.grey,
                                 ),
                                 onPressed: () {
@@ -261,13 +288,29 @@ class _LoginPageState extends State<LoginPage>
                           children: [
                             Expanded(
                               child: Container(
-                                margin: EdgeInsets.only(
-                                    left: 20, top: 20, right: 20, bottom: 0),
+                                margin: EdgeInsets.only(left: 20, top: 20, right: 20, bottom: 0),
                                 height: 40,
                                 child: ElevatedButton(
                                   onPressed: () {
                                     print('启动登陆');
-                                    _emailLogin();
+
+                                    if (_userEmailController.text.isEmpty || _userPasswordController.text.isEmpty) {
+                                      // 错误提示
+                                      toastInfo(msg: "邮箱或密码，不能为空");
+                                    } else {
+                                      // 错误提示
+                                      // toastInfo(msg: "邮箱${_userEmailController.text}，密码：${_userPasswordController.text}");
+                                      var params = {
+                                        'account': _userEmailController.text,
+                                        'account_type': 'email',
+                                        'password': _userPasswordController.text,
+                                        'application_id': RECAPTURE_APP_ID(),
+                                        'device_id': Constant.DEVICE_ID
+                                      };
+
+                                      ///第一次调用的地方，
+                                      _getSessions2(params);
+                                    }
                                   },
                                   child: Text('登录'),
                                 ),
@@ -304,49 +347,110 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  _emailLogin() async {
-    var params = {
-      'account': 'yywishp@gmail.com',
-      'account_type': 'email',
-      'password': 'Gyx12345678',
-      'application_id': RECAPTURE_APP_ID(),
-      'device_id': Constants.DEVICE_ID
-    };
+  ///  请求接口
+  _getSessions2(Map<String, String> params) async {
     // 这么用是 表单类型 contentType ：multipart/form-data
     // var formData = FormData.fromMap(params);
 
     print(params);
     print(params.toString());
+    EasyLoading.show(status: 'Loading', dismissOnTap: false);
 
-    var loginResponse = await OceanApi.login(context: context, params: params);
+    var loginResponse = await OceanApi.sessionsV2(context: context, params: params);
     switch (loginResponse.code) {
+      // 登录成功
       case 0:
+        toastInfo(msg: S.of(context).login_successfully);
+        var map = loginResponse.data!.toJson();
+
+        SpUtil.putString(Constant.email, _userEmailController.text);
+
+        var token = map['token'];
+
+        print('----token :$token');
+        SpUtil.putString(Constant.token, token);
+
+        EasyLoading.dismiss();
+
+        Navigator.of(context).pop();
         break;
 
       case 1:
+        toastInfo(msg: '${loginResponse.message}');
+        EasyLoading.dismiss();
+
         break;
+      //  被锁住
       case 8:
+        toastInfo(msg: 'Account has been locked,please try 2 hours later.');
+        EasyLoading.dismiss();
         break;
+      //  手机验证
       case 4:
         break;
+      //  邮箱验证
       case 1242:
+
+        ///去 邮箱验证界面
+        Navigator.pushNamed(context, Routes.verifyCodePage, arguments: {'email': '${_userEmailController.text}'})
+            .then((value) {
+          value as Map;
+
+          // 拿到验证码
+          var emailParams = {
+            'account': _userEmailController.text,
+            'account_type': 'email',
+            'password': _userPasswordController.text,
+            'application_id': RECAPTURE_APP_ID(),
+            'device_id': Constant.DEVICE_ID,
+            'email_code': value['code'] as String
+          };
+
+          emailParams.addAll({'device_trust': value['isChecked'].toString()});
+
+          _getSessions2(emailParams);
+
+          // EasyLoading.dismiss();
+        });
+
         break;
+      //  otp 验证
       case 1222:
         break;
+      //  google 验证
       case 1212:
+        EasyLoading.dismiss();
+        print('--- google 验证');
+        _checkCaptcha('google');
+
+        break;
+      //  腾讯 验证
+      case 1213:
+        EasyLoading.dismiss();
+        print('--- 腾讯 验证');
         _checkCaptcha('tencent');
 
         break;
 
-      case 1213:
-        _checkCaptcha('google');
+      case 1223:
+      case 1224:
 
+      case 1233:
+      case 1234:
+      case 1235:
 
-
+      case 1243:
+      case 1244:
+      case 1245:
+        toastInfo(msg: '${loginResponse.message}');
+        EasyLoading.dismiss();
 
         break;
 
       default:
+        toastInfo(msg: '${loginResponse.message}');
+        EasyLoading.dismiss();
+
         break;
     }
 
@@ -367,23 +471,61 @@ class _LoginPageState extends State<LoginPage>
     }*/
   }
 
+  ///邮箱验证，结束后，就是正常登陆拿到token
+  _checkCaptcha(String captchaType) {
+    Navigator.pushNamed(context, Routes.captchaPage, arguments: {'type': captchaType}).then((value) {
+      print('==========  $value');
+      if (value == null) {
+        return;
+      }
 
+      value as Map;
+      String type = value['type'] as String;
+      var event = value['event'];
 
-  _checkCaptcha(String captchaType){
-    switch (captchaType) {
-      case 'tencent':
+      // 这里必须要这么写，否则json无法解析,缺少双引号
 
-        Navigator.pushNamed(context, Routes.captchaPage,arguments: {'type':'tencent'});
+      String jsonMap = jsonEncode(event);
+      print('jsonMap === $jsonMap');
+      Map decode = json.decode(jsonMap);
 
-        break;
-       case 'google':
-         Navigator.pushNamed(context, Routes.captchaPage,arguments: {'type':'google'});
+      switch (type) {
+        case 'tencent':
+          String ticket = decode['ticket'];
+          String randstr = decode['randstr'];
 
-         break;
+          var params = {
+            'account': 'yywishp@gmail.com',
+            'account_type': 'email',
+            'password': _userPasswordController.text,
+            'application_id': RECAPTURE_APP_ID(),
+            'device_id': Constant.DEVICE_ID,
+            'recaptcha_type': 'tencent',
+            'tx-recaptcha-response': ticket,
+            'tx-randstr': randstr,
+          };
 
-    }
+          _getSessions2(params);
 
+          break;
 
+        case 'google':
+          String ticket = decode['ticket'];
+
+          var params = {
+            'account': 'yywishp@gmail.com',
+            'account_type': 'email',
+            'password': _userPasswordController.text,
+            'application_id': RECAPTURE_APP_ID(),
+            'device_id': Constant.DEVICE_ID,
+            'recaptcha_type': 'google',
+            'g-recaptcha-response': ticket,
+          };
+
+          _getSessions2(params);
+
+          break;
+      }
+    });
   }
-
 }

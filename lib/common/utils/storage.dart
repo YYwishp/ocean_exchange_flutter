@@ -5,6 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+
+@Deprecated('自己练习，不用于项目，项目采用 SpUtil')
 class StorageUtil {
   /*/// 静态私有实例对象
   static final _instance=StorageUtil._init();

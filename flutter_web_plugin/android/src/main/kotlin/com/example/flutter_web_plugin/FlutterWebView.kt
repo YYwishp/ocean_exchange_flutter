@@ -83,13 +83,14 @@ class FlutterWebView() : PlatformView, MethodChannel.MethodCallHandler {
 	}
 
 	private fun callback(data: String) {
+		Log.e("原始数据", "$data")
 		val json = JSONObject(data)
 		val type = json.optString("type", "null")
 		when (type) {
 			"tencent" -> {
 				val randStr = json.optString("randstr", "")
 				val ticket = json.optString("ticket", "")
-				var map = mapOf("randStr" to randStr, "ticket" to ticket)
+				var map = mapOf("randstr" to randStr, "ticket" to ticket)
 
 
 				Log.e("腾讯数据", "${Thread.currentThread().name} ${map.toString()}")
@@ -101,7 +102,7 @@ class FlutterWebView() : PlatformView, MethodChannel.MethodCallHandler {
 			}
 			"google" -> {
 				val ticket = json.optString("ticket", "")
-				var map = mapOf("randStr" to "null", "ticket" to ticket)
+				var map = mapOf("randstr" to "null", "ticket" to ticket)
 				Log.e("google 数据", "9999${Thread.currentThread().name}--${map.toString()}")
 
 

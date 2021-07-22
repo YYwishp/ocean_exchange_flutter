@@ -1,9 +1,20 @@
+import 'dart:convert';
+
+import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
+import 'package:ocean_exchange_flutter/generated/l10n.dart';
+import 'package:ocean_exchange_flutter/net/OceanApi.dart';
 import 'package:ocean_exchange_flutter/page/funds/funds_page.dart';
+import 'package:ocean_exchange_flutter/page/funds/funds_page2.dart';
 import 'package:ocean_exchange_flutter/page/home/home_page.dart';
 import 'package:ocean_exchange_flutter/page/markets/market_page.dart';
 import 'package:ocean_exchange_flutter/page/swap_trades/swap_trades_page.dart';
 import 'package:ocean_exchange_flutter/page/trades/trades_page.dart';
+import 'package:ocean_exchange_flutter/common/utils/theme_utils.dart';
+import 'package:ocean_exchange_flutter/res/constant.dart';
+import 'package:ocean_exchange_flutter/routes/routes.dart';
+
+
 
 class NavigationBarPageView extends StatefulWidget {
   @override
@@ -29,7 +40,7 @@ class _NavigationBarPageViewState extends State<NavigationBarPageView> {
             width: 16,
             height: 16,
           ),
-          label: '首页'),
+          label: S.of(context).home),
       BottomNavigationBarItem(
           tooltip: '',
           icon: Image.asset(
@@ -42,7 +53,7 @@ class _NavigationBarPageViewState extends State<NavigationBarPageView> {
             width: 16,
             height: 16,
           ),
-          label: '行情'),
+          label: S.of(context).markets),
       BottomNavigationBarItem(
           tooltip: '',
           icon: Image.asset(
@@ -55,7 +66,7 @@ class _NavigationBarPageViewState extends State<NavigationBarPageView> {
             width: 16,
             height: 16,
           ),
-          label: '交易'),
+          label: S.of(context).trades),
       BottomNavigationBarItem(
           tooltip: '',
           icon: Image.asset(
@@ -68,7 +79,7 @@ class _NavigationBarPageViewState extends State<NavigationBarPageView> {
             width: 16,
             height: 16,
           ),
-          label: '合约'),
+          label: S.of(context).contract),
       BottomNavigationBarItem(
           tooltip: '',
           icon: Image.asset(
@@ -81,7 +92,7 @@ class _NavigationBarPageViewState extends State<NavigationBarPageView> {
             width: 16,
             height: 16,
           ),
-          label: '资产'),
+          label: S.of(context).funds),
     ];
   }
 
@@ -96,7 +107,8 @@ class _NavigationBarPageViewState extends State<NavigationBarPageView> {
       MarketsPage(),
       TradesPage(),
       SwapTradesPage(),
-      FundsPages()
+      // FundsPages()
+      FundsPages2()
     ];
 
     _pageController = PageController(initialPage: 0);
@@ -110,6 +122,47 @@ class _NavigationBarPageViewState extends State<NavigationBarPageView> {
 
   @override
   Widget build(BuildContext context) {
+
+
+    OceanApi.legalTenders(context: context).then((value){
+      print('----$value');
+
+      Constant.setLegalTenders(value.data);
+
+      if (Constant.current_LegalTender.isEmpty) {
+
+        Constant.legalTenders.forEach((element) {
+          if (element.code == "USD") {
+            if (element.code!=null) {
+              Constant.current_LegalTender = element.code!;
+            }
+
+
+            //保存到本地
+
+            SpUtil.putObject(Constant.legal_tender, element);
+
+
+
+          }
+        });
+      }
+
+
+
+
+    });
+
+
+
+
+
+
+
+
+
+    final bool isDark = context.isDark;
+
     return Scaffold(
       body: PageView.builder(
         itemBuilder: (context, index) {
@@ -124,11 +177,12 @@ class _NavigationBarPageViewState extends State<NavigationBarPageView> {
       ),
       bottomNavigationBar: Theme(
           data: ThemeData(
-              // brightness: Brightness.light,
-              highlightColor: Colors.transparent,
-              splashColor: Colors.transparent),
+            // brightness: Brightness.light,
+            // highlightColor: Colors.transparent,
+            // splashColor: Colors.transparent,
+          ),
           child: BottomNavigationBar(
-            backgroundColor: Color(0xff101418),
+            backgroundColor: isDark?Color(0xff101418):Colors.white,
             selectedItemColor: Color(0xff005dcd),
             unselectedItemColor: Color(0xff6e7173),
 
@@ -150,6 +204,49 @@ class _NavigationBarPageViewState extends State<NavigationBarPageView> {
   }
 
   void onTap(int index) {
-    _pageController.jumpToPage(index);
+
+    Constant.TOKEN = SpUtil.getString(Constant.token);
+
+    if(Constant.TOKEN!.isEmpty && index ==4){
+      Navigator.pushNamed(context, Routes.loginPage);
+
+    }else{
+      _pageController.jumpToPage(index);
+    }
+
+
+
+
+
+
   }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

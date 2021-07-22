@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:ocean_exchange_flutter/page/login/captcha/captcha_page.dart';
+import 'package:ocean_exchange_flutter/page/login/captcha/verify_code_page.dart';
 import 'package:ocean_exchange_flutter/page/login/login_page.dart';
+import 'package:ocean_exchange_flutter/page/moneypage.dart';
 import 'package:ocean_exchange_flutter/page/navigation/NavigationBarPageView.dart';
+import 'package:ocean_exchange_flutter/page/setting/locale_page.dart';
+import 'package:ocean_exchange_flutter/page/setting/theme_page.dart';
 import 'package:ocean_exchange_flutter/page/splash/splash_page.dart';
 
 
@@ -11,10 +15,14 @@ class Routes{
   static const navigationBarPage = '/navigationBarPage';
   static const loginPage = '/loginPage';
   static const captchaPage = '/captchaPage';
+  static const verifyCodePage = '/VerifyCodePage';
+  static const themePage = '/ThemePage';
+  static const localePage = '/LocalePage';
+  static const MoneyPage = '/MoneyPage';
 
 }
 
-//配置路由
+//配置路由 map 集合
 final _routes = {
   //key 名字：value
   //初始化记载的路由 ,不需要传值，就不配置 arguments
@@ -22,6 +30,10 @@ final _routes = {
   Routes.navigationBarPage: (context) => NavigationBarPageView(),
   Routes.loginPage: (context) => LoginPage(),
   Routes.captchaPage: (context,{arguments}) => CaptchaPage(arguments: arguments,),
+  Routes.verifyCodePage: (context,{arguments}) => VerifyCodePage(arguments: arguments,),
+  Routes.themePage: (context,{arguments}) => ThemePage(),
+  Routes.localePage: (context,{arguments}) => LocalePage(),
+  Routes.MoneyPage: (context,{arguments}) => MoneyPage('MoneyPage'),
 
 
 

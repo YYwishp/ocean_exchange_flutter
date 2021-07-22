@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:lottie/lottie.dart';
-import 'package:ocean_exchange_flutter/common/routes/routes.dart';
+import 'package:ocean_exchange_flutter/routes/routes.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -19,6 +19,7 @@ class _SplashPageState extends State<SplashPage> with TickerProviderStateMixin {
     ..addStatusListener((status) {
       if (status == AnimationStatus.completed) {
         print('动画结束');
+         Navigator.of(context).pop();
         
         Navigator.pushNamed(context, Routes.navigationBarPage);
         

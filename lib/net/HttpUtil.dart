@@ -5,12 +5,14 @@ import 'package:device_info/device_info.dart';
 import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:flustars/flustars.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:ocean_exchange_flutter/global/constants.dart';
+import 'package:ocean_exchange_flutter/global/url_constant.dart';
+import 'package:ocean_exchange_flutter/res/constant.dart';
 import 'package:ocean_exchange_flutter/widget/toast.dart';
 import 'package:package_info/package_info.dart';
 
-import '../../global/Global.dart';
+import '../global/Global.dart';
 import 'OceanApi.dart';
 
 class HttpUtil {
@@ -64,7 +66,7 @@ class HttpUtil {
         responseType: ResponseType.json,
       );
 
-      dio = new Dio(options);
+      dio = Dio(options);
 
       // Cookie管理
       CookieJar cookieJar = CookieJar();
@@ -93,6 +95,17 @@ class HttpUtil {
 
                   print('==== 401 ====');
                   break;
+                case 404:
+
+                  print('连接超时 = ${e.requestOptions.path}');
+                  // 404 符合情况，就切换host
+                  if (e.requestOptions.path.contains('pc2f86w9')) {
+                    switchEngineHost();
+
+                  }
+
+                  print('==== 404 ====');
+                  break;
                 default:
               }
             }
@@ -102,8 +115,10 @@ class HttpUtil {
         ),
       );
       // 日志拦截器
-      dio.interceptors.add(LogInterceptor());
-
+      dio.interceptors.add(LogInterceptor(
+        requestBody: true,
+        responseBody: true,
+      ));
 
       // 加内存缓存
       // dio.interceptors.add(NetCache());
@@ -121,8 +136,7 @@ class HttpUtil {
       };
     }*/
 
-      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
-          (client) {
+      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate = (client) {
         client.badCertificateCallback = (cert, host, port) {
           return true;
         };
@@ -159,7 +173,7 @@ class HttpUtil {
       model = iosInfo.model;
     }
 
-    return "OceanEx/$version ($packageName;build:$buildNumber;$plantInfo;${Constants.DEVICE_ID};$brand,$model) dio/4.0.0";
+    return "OceanEx/$version ($packageName;build:$buildNumber;$plantInfo;${Constant.DEVICE_ID};$brand,$model) dio/4.0.0";
   }
 
   /*
@@ -175,6 +189,8 @@ class HttpUtil {
         break;
       case DioErrorType.connectTimeout:
         {
+          print('连接超时 = ${error.requestOptions.path}');
+
           return ErrorEntity(code: -1, message: "连接超时");
         }
         break;
@@ -202,7 +218,11 @@ class HttpUtil {
                 break;
               case 401:
                 {
-                  return ErrorEntity(code: errCode, message: "没有权限");
+                  SpUtil.remove(Constant.token);
+
+                  Constant.TOKEN = null;
+
+                  return ErrorEntity(code: errCode, message: "Token 过期请重新登录");
                 }
                 break;
               case 403:
@@ -243,18 +263,21 @@ class HttpUtil {
               default:
                 {
                   // return ErrorEntity(code: errCode, message: "未知错误");
-                  return ErrorEntity(
-                      code: errCode,
-                      message: error.response?.statusMessage ?? "未知错误");
+
+                  print('------- default');
+                  return ErrorEntity(code: errCode, message: error.response?.statusMessage ?? "未知错误");
                 }
             }
           } on Exception catch (_) {
+            print('------- Exception');
+
             return ErrorEntity(code: -1, message: "未知错误");
           }
         }
         break;
       default:
         {
+          print('------- other 错误');
           return ErrorEntity(code: -1, message: error.message);
         }
     }
@@ -312,6 +335,7 @@ class HttpUtil {
       options: requestOptions,
       cancelToken: cancelToken,
     );
+    // print('===response:=${response.requestOptions.path}');
 
     return response.data;
   }
