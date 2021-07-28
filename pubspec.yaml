@@ -90,8 +90,20 @@ dependencies:
   #  刷新组件
   pull_to_refresh: ^2.0.0
 
+  #  高精度 计算
   rational: ^1.2.1
+  #  高精度 计算
   decimal: ^1.2.0
+
+
+  # 特殊用处的 刷新头
+  pull_to_refresh_notification: ^2.1.0
+
+  #  NestedScrollView 拓展
+  extended_nested_scroll_view: ^3.0.1
+
+  #  image图片拓展
+  extended_image: ^4.0.0
 
 
 dev_dependencies:

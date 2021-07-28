@@ -42,8 +42,10 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
             child: Text(
               '登录',
-              style: TextStyle(fontSize: 16.sp,fontWeight: FontWeight.normal,),
-
+              style: TextStyle(
+                fontSize: 16.sp,
+                fontWeight: FontWeight.normal,
+              ),
             ),
           ),
           Center(
@@ -81,6 +83,67 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
             onPressed: () {
               setState(() {
                 Navigator.pushNamed(context, Routes.localePage);
+              });
+            },
+          ),
+          ElevatedButton(
+            child: Text('简单动画'),
+            onPressed: () {
+              setState(() {
+                Navigator.pushNamed(context, Routes.SimpleAnimation);
+              });
+            },
+          ),
+          ElevatedButton(
+            child: Text('简单动画2'),
+            onPressed: () {
+              setState(() {
+                Navigator.pushNamed(context, Routes.SimpleAnimation2);
+              });
+            },
+          ),
+          ElevatedButton(
+            child: Text('简单动画3'),
+            onPressed: () {
+              setState(() {
+                Navigator.pushNamed(context, Routes.SimpleAnimation3);
+              });
+            },
+          ),
+          ElevatedButton(
+            child: Text('简单动画4'),
+            onPressed: () {
+              setState(() {
+                Navigator.pushNamed(context, Routes.SimpleAnimation4);
+              });
+            },
+          ),
+          ElevatedButton(
+            child: Text('简单动画5'),
+            onPressed: () {
+              setState(() {
+                Navigator.pushNamed(context, Routes.SimpleAnimation5);
+              });
+            },
+          ),ElevatedButton(
+            child: Text('手动 动画 1'),
+            onPressed: () {
+              setState(() {
+                Navigator.pushNamed(context, Routes.ManualAnimation1);
+              });
+            },
+          ),ElevatedButton(
+            child: Text('手动 动画 2'),
+            onPressed: () {
+              setState(() {
+                Navigator.pushNamed(context, Routes.ManualAnimation2);
+              });
+            },
+          ),ElevatedButton(
+            child: Text('手动 动画 3'),
+            onPressed: () {
+              setState(() {
+                Navigator.pushNamed(context, Routes.ManualAnimation3);
               });
             },
           ),

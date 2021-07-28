@@ -1,4 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:ocean_exchange_flutter/page/animation/SimpleAnimation.dart';
+import 'package:ocean_exchange_flutter/page/animation/SimpleAnimation2.dart';
+import 'package:ocean_exchange_flutter/page/animation/SimpleAnimation3.dart';
+import 'package:ocean_exchange_flutter/page/animation/SimpleAnimation4.dart';
+import 'package:ocean_exchange_flutter/page/animation/SimpleAnimation5.dart';
+import 'package:ocean_exchange_flutter/page/animation/manual_animation1.dart';
+import 'package:ocean_exchange_flutter/page/animation/manual_animation2.dart';
+import 'package:ocean_exchange_flutter/page/animation/manual_animation3.dart';
 import 'package:ocean_exchange_flutter/page/login/captcha/captcha_page.dart';
 import 'package:ocean_exchange_flutter/page/login/captcha/verify_code_page.dart';
 import 'package:ocean_exchange_flutter/page/login/login_page.dart';
@@ -19,6 +27,14 @@ class Routes{
   static const themePage = '/ThemePage';
   static const localePage = '/LocalePage';
   static const MoneyPage = '/MoneyPage';
+  static const SimpleAnimation = '/SimpleAnimation';
+  static const SimpleAnimation2 = '/SimpleAnimation2';
+  static const SimpleAnimation3 = '/SimpleAnimation3';
+  static const SimpleAnimation4 = '/SimpleAnimation4';
+  static const SimpleAnimation5 = '/SimpleAnimation5';
+  static const ManualAnimation1 = '/ManualAnimation1';
+  static const ManualAnimation2 = '/ManualAnimation2';
+  static const ManualAnimation3 = '/ManualAnimation3';
 
 }
 
@@ -34,6 +50,14 @@ final _routes = {
   Routes.themePage: (context,{arguments}) => ThemePage(),
   Routes.localePage: (context,{arguments}) => LocalePage(),
   Routes.MoneyPage: (context,{arguments}) => MoneyPage('MoneyPage'),
+  Routes.SimpleAnimation: (context,{arguments}) => SimpleAnimation(),
+  Routes.SimpleAnimation2: (context,{arguments}) => SimpleAnimation2(),
+  Routes.SimpleAnimation3: (context,{arguments}) => SimpleAnimation3(),
+  Routes.SimpleAnimation4: (context,{arguments}) => SimpleAnimation4(),
+  Routes.SimpleAnimation5: (context,{arguments}) => SimpleAnimation5(),
+  Routes.ManualAnimation1: (context,{arguments}) => ManualAnimation1(),
+  Routes.ManualAnimation2: (context,{arguments}) => ManualAnimation2(),
+  Routes.ManualAnimation3: (context,{arguments}) => ManualAnimation3(),
 
 
 

@@ -6,6 +6,7 @@ import 'package:ocean_exchange_flutter/generated/l10n.dart';
 import 'package:ocean_exchange_flutter/net/OceanApi.dart';
 import 'package:ocean_exchange_flutter/page/funds/funds_page.dart';
 import 'package:ocean_exchange_flutter/page/funds/funds_page2.dart';
+import 'package:ocean_exchange_flutter/page/funds/funds_page3.dart';
 import 'package:ocean_exchange_flutter/page/home/home_page.dart';
 import 'package:ocean_exchange_flutter/page/markets/market_page.dart';
 import 'package:ocean_exchange_flutter/page/swap_trades/swap_trades_page.dart';
@@ -108,7 +109,8 @@ class _NavigationBarPageViewState extends State<NavigationBarPageView> {
       TradesPage(),
       SwapTradesPage(),
       // FundsPages()
-      FundsPages2()
+      // FundsPages2()
+      FundsPages3()
     ];
 
     _pageController = PageController(initialPage: 0);
