@@ -1296,12 +1296,12 @@ class _ExchangeBalancePageState extends State<ExchangeBalancePage> {
                   ),
                 ),
 
-                Padding(
-                  padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0),
-                  child: MyCheckbox((value) {
-                    print('===== 选中了么 $value');
-                  }, widget.showPercentCheckBoxKey),
-                ),
+                // Padding(
+                //   padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0),
+                //   child: MyCheckbox((value) {
+                //     print('===== 选中了么 $value');
+                //   }, widget.showPercentCheckBoxKey),
+                // ),
               ],
             );
           } else {

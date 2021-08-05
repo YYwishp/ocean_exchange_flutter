@@ -1,3 +1,4 @@
+import 'package:common_utils/common_utils.dart';
 import 'package:ocean_exchange_flutter/net/HttpUtil.dart';
 import 'package:ocean_exchange_flutter/common/utils/storage.dart';
 import 'package:ocean_exchange_flutter/global/url_constant.dart';
@@ -29,6 +30,8 @@ class Global {
     Constant.configUUID();
 
     HttpUtil().init();
+
+    LogUtil.init(tag: "Flutter_OceanEx",isDebug: true);
 
 
 

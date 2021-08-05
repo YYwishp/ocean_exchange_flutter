@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh_notification/pull_to_refresh_notification.dart';
 import 'dart:math' as math;
+
+import 'package:ocean_exchange_flutter/widget/nested_refresh/pull_to_refresh_notification.dart';
 class RefreshLogo extends StatefulWidget {
   const RefreshLogo(
 

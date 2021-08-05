@@ -2,12 +2,12 @@ import 'dart:math';
 import 'dart:ui' as ui show Image;
 import 'package:extended_image/extended_image.dart';
 import 'package:flutter/material.dart';
-import 'package:pull_to_refresh_notification/pull_to_refresh_notification.dart';
 
 import 'package:intl/intl.dart';
+import 'package:ocean_exchange_flutter/widget/nested_refresh/pull_to_refresh_notification.dart';
 
 double get maxDragOffset => 100;
-double hideHeight = maxDragOffset / 2.3;
+double hideHeight = maxDragOffset / 1.7;
 double refreshHeight = maxDragOffset / 1.5;
 
 class PullToRefreshHeader extends StatelessWidget {
@@ -33,13 +33,16 @@ class PullToRefreshHeader extends StatelessWidget {
     } else if (info?.mode == RefreshIndicatorMode.canceled) {
       text = 'Cancel refresh';
     }
+    else if (info?.mode == RefreshIndicatorMode.error) {
+      text = 'Refresh error';
+    }
 
     final TextStyle ts = const TextStyle(
       color: Colors.grey,
     ).copyWith(fontSize: 14);
 
     final double dragOffset = info?.dragOffset ?? 0.0;
-    print('-----dragOffset $dragOffset ');
+    // print('-----dragOffset $dragOffset ');
 
     final DateTime time = lastRefreshTime;
     final double top = -hideHeight + dragOffset;
@@ -47,8 +50,8 @@ class PullToRefreshHeader extends StatelessWidget {
     return Container(
       height: dragOffset,
       color: color ,
-      //padding: EdgeInsets.only(top: dragOffset / 3),
-      //padding: EdgeInsets.only(bottom: 5.0),
+      // padding: EdgeInsets.only(top: dragOffset / 3),
+      // padding: EdgeInsets.only(bottom: 5.0),
       child: Stack(
         children: <Widget>[
           Positioned(
@@ -117,13 +120,13 @@ class RefreshImage extends StatelessWidget {
   final double top;
   @override
   Widget build(BuildContext context) {
-    const double imageSize = 100;
+    const double imageSize = 40;
     return ExtendedImage.asset(
       // 'assets/images/icon_swap_more.png',
-      // 'assets/images/flutterCandies_grey.png',
-      'assets/images/oceanex_logo.png',
-      width: 100,
-      height: 50,
+      'assets/images/flutterCandies_grey.png',
+      // 'assets/images/oceanex_logo.png',
+      width: imageSize,
+      height: imageSize,
       afterPaintImage: (Canvas canvas, Rect rect, ui.Image image, Paint paint) {
         final double imageHeight = image.height.toDouble();
         final double imageWidth = image.width.toDouble();

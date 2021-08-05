@@ -362,7 +362,7 @@ class _LoginPageState extends State<LoginPage> with SingleTickerProviderStateMix
       case 0:
         toastInfo(msg: S.of(context).login_successfully);
         var map = loginResponse.data!.toJson();
-
+        Constant.EMAIL = _userEmailController.text;
         SpUtil.putString(Constant.email, _userEmailController.text);
 
         var token = map['token'];

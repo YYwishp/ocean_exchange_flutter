@@ -4,32 +4,39 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:ocean_exchange_flutter/common/utils/theme_utils.dart';
 
 class MyCheckbox extends StatefulWidget {
-  final ValueChanged<bool?> onValue;
 
-  const MyCheckbox(
-    this.onValue,
-    Key key,
-  ) : super(key: key);
+
+
+  final ValueChanged<bool?> onChange;
+  late final bool value;
+
+
+  MyCheckbox({
+    Key? key,
+    required this.onChange,
+    required this.value
+
+  }) : super(key: key);
 
   @override
   _MyCheckboxState createState() => _MyCheckboxState();
+
+
 }
 
 class _MyCheckboxState extends State<MyCheckbox> {
-  bool value = false;
+
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       ///CHECKBOX
       onTap: () {
-        setState(() {
-          this.value = !this.value;
 
-          widget.onValue(value);
+        widget.onChange(!widget.value);
 
-          // print('------ value $value');
-        });
+
+
       },
       child: Container(
         // decoration: BoxDecoration(shape: BoxShape.rectangle, color: Colors.white),
@@ -55,20 +62,20 @@ class _MyCheckboxState extends State<MyCheckbox> {
         //         ),
         //       ),
 
-        child: value
+        child: widget.value
             ? SizedBox(
                 //svg 直接使用android svg图
                 child: AvdPicture.asset(context.isDark
-                    ? 'assets/images/night/icon_percent_hide.xml'
-                    : 'assets/images/day/icon_percent_hide.xml'),
+                    ? 'assets/images/night/icon_percent_show.xml'
+                    : 'assets/images/day/icon_percent_show.xml'),
                 height: 18.h,
                 width: 18.w,
               )
             : SizedBox(
                 //svg 直接使用android svg图
                 child: AvdPicture.asset(context.isDark
-                    ? 'assets/images/night/icon_percent_show.xml'
-                    : 'assets/images/day/icon_percent_show.xml'),
+                    ? 'assets/images/night/icon_percent_hide.xml'
+                    : 'assets/images/day/icon_percent_hide.xml'),
                 height: 18.h,
                 width: 18.w,
               ),

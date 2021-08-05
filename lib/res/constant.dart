@@ -23,6 +23,7 @@ class Constant{
   static const String uuid = 'uuid';
   static const String email = 'email';
   static const String token = 'token';
+  static const String sn = 'sn';
   static const String legal_tender= 'legal_tender';
 
 
@@ -30,7 +31,7 @@ class Constant{
 
   // 保存 法币汇率 集合
   static List<Data> legalTenders =[];
-  // 保存 法币类型 code
+  // 保存 法币类型 code :USD
   static String current_LegalTender = '';
 
 
@@ -38,6 +39,20 @@ class Constant{
 
   static String DEVICE_ID = "";
   static String? TOKEN = '';
+  static String _EMAIL = '';
+
+  static set EMAIL(String value){
+    _EMAIL = value;
+    SpUtil.putString(Constant.email, value);
+
+  }
+
+  static String get EMAIL{
+    if(_EMAIL.isEmpty){
+      _EMAIL = SpUtil.getString(Constant.email)!;
+    }
+    return _EMAIL;
+  }
 
 
 
@@ -70,7 +85,9 @@ class Constant{
     }
   }
 
-
+  ///
+  /// 获取汇率
+  ///
   static Data? findLegalTenders(String code){
 
     Data? temp;
@@ -85,8 +102,14 @@ class Constant{
 
   }
 
+  ///
+  /// 是否登陆
+  ///
+  static bool isLogin(){
+    Constant.TOKEN = SpUtil.getString(Constant.token);
 
-
+    return Constant.TOKEN!.isNotEmpty;
+  }
 
 
 

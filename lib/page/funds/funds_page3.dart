@@ -6,31 +6,26 @@ import 'package:flustars/flustars.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/avd.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:ocean_exchange_flutter/common/model/funds_entity.dart';
 import 'package:ocean_exchange_flutter/common/model/price_entity.dart';
 import 'package:ocean_exchange_flutter/common/utils/formart_num.dart';
 import 'package:ocean_exchange_flutter/net/OceanApi.dart';
 import 'package:ocean_exchange_flutter/common/utils/screen.dart';
 import 'package:ocean_exchange_flutter/res/colors.dart';
 import 'package:ocean_exchange_flutter/res/constant.dart';
+import 'package:ocean_exchange_flutter/routes/routes.dart';
 import 'package:ocean_exchange_flutter/widget/MyCheckbox.dart';
 import 'package:ocean_exchange_flutter/widget/RefreshLogo.dart';
+import 'package:ocean_exchange_flutter/widget/nested_refresh/pull_to_refresh_notification.dart';
 import 'package:ocean_exchange_flutter/widget/push_to_refresh_header.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:ocean_exchange_flutter/common/utils/theme_utils.dart';
-import 'package:pull_to_refresh_notification/pull_to_refresh_notification.dart';
 import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart' as extended;
 
 ///
 ///
 /// 资产页面
 ///
-///
-///
-///
-///
-///
-///
-
 class FundsPages3 extends StatefulWidget {
   @override
   _FundsPages3State createState() => _FundsPages3State();
@@ -45,17 +40,13 @@ class _FundsPages3State extends State<FundsPages3>
 
   var price_list = <PriceEntity>[];
 
-  GlobalKey _showPercentCheckBoxKey = GlobalKey();
-
-  DateTime lastRefreshTime = DateTime.now();
+  // GlobalKey _showPercentCheckBoxKey = GlobalKey<MyCheckboxState>();
 
   late TabController primaryTC;
   final int _length2 = 50;
 
-
   final GlobalKey<PullToRefreshNotificationState> key = GlobalKey<PullToRefreshNotificationState>();
-
-
+  List<Account>? accounts;
 
   @override
   bool get wantKeepAlive => true;
@@ -72,25 +63,18 @@ class _FundsPages3State extends State<FundsPages3>
 
     // key.currentState!.show(notificationDragOffset: 150);
 
+    /// 渲染完毕回调，只调用一次
     WidgetsBinding.instance?.addPostFrameCallback((mag) {
       print("===== 页面渲染完毕");
 
-      Future.delayed(Duration(microseconds: 150),(){
+      Future.delayed(Duration(microseconds: 150), () {
         key.currentState!.show(notificationDragOffset: 80);
       });
-
-
-
     });
 
-    WidgetsBinding.instance?.addPersistentFrameCallback((timeStamp){
-      print(" =====================================实时 Frame 绘制回调 $timeStamp");
-    });
-
-
-
-
-
+    // WidgetsBinding.instance?.addPersistentFrameCallback((timeStamp){
+    //   print(" =====================================实时 Frame 绘制回调 $timeStamp");
+    // });
   }
 
   @override
@@ -105,25 +89,13 @@ class _FundsPages3State extends State<FundsPages3>
   Widget build(BuildContext context) {
     print('FundsPages build');
 
-
-
-
-
-
     var scaffold = Scaffold(
       body: _buildScaffoldBody(),
     );
 
-
     // key.currentState!.show(notificationDragOffset: 150);
-
-
-
-
     return scaffold;
   }
-
-
 
   Widget _buildScaffoldBody() {
     final double statusBarHeight = MediaQuery.of(context).padding.top;
@@ -138,22 +110,21 @@ class _FundsPages3State extends State<FundsPages3>
       key: key,
       color: Colors.blue,
       maxDragOffset: 80,
-
       onRefresh: () {
-        // return Future<bool>.delayed(
-        //   const Duration(
-        //     seconds: 1,
-        //   ),
-        //   () {
-        //     setState(
-        //       () {
-        //         _length1 += 10;
-        //         lastRefreshTime = DateTime.now();
-        //       },
-        //     );
-        //     return true;
-        //   },
-        // );
+        /*return Future<bool>.delayed(
+          const Duration(
+            seconds: 1,
+          ),
+          () {
+            setState(
+              () {
+                _length1 += 10;
+                lastRefreshTime = DateTime.now();
+              },
+            );
+            return true;
+          },
+        );*/
 
         return requestPrices();
       },
@@ -181,15 +152,15 @@ class _FundsPages3State extends State<FundsPages3>
 
             /// 刷新头
             PullToRefreshContainer((PullToRefreshScrollNotificationInfo? info) {
-              /*return SliverToBoxAdapter(
+              return SliverToBoxAdapter(
                 child: PullToRefreshHeader(
                   info,
-                  lastRefreshTime,
+                  DateTime.now(),
                   color: Colors.white,
                 ),
-              );*/
+              );
 
-              final double offset = info?.dragOffset ?? 0.0;
+              /*final double offset = info?.dragOffset ?? 0.0;
               final Widget child = Container(
                 alignment: Alignment.center,
                 height: offset,
@@ -202,7 +173,7 @@ class _FundsPages3State extends State<FundsPages3>
 
               return SliverToBoxAdapter(
                 child: child,
-              );
+              );*/
             }),
 
             /// 头部多少BTC
@@ -389,39 +360,72 @@ class _FundsPages3State extends State<FundsPages3>
                   children: <Widget>[
                     Expanded(
                       child: Container(
-                        color: context.isDark ? Color(0xff101418) : Colors.white,
-                        padding: EdgeInsets.fromLTRB(15, 10, 15, 0),
+                        // color: context.isDark ? Color(0xff101418) : Colors.white,
+                        // padding: EdgeInsets.fromLTRB(15, 10, 15, 0),
                         margin: EdgeInsets.only(top: 10, bottom: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              // 垂直 主轴（横向） 的排列方式
-                              children: <Widget>[
-                                SizedBox(
-                                  child: AvdPicture.asset(
-                                    'assets/images/icon_quick_money.xml',
+                        child: OutlinedButton(
+                          onPressed: () {
+
+                            Navigator.pushNamed(context, Routes.BuyCoinListPage);
+
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                // 垂直 主轴（横向） 的排列方式
+                                children: <Widget>[
+                                  SizedBox(
+                                    child: AvdPicture.asset(
+                                      'assets/images/icon_quick_money.xml',
+                                    ),
+                                    height: 36.h,
+                                    width: 36.w,
                                   ),
-                                  height: 36.h,
-                                  width: 36.w,
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(left: 20),
-                                  child: Text(
-                                    '买币',
-                                    style: TextStyle(fontSize: duSetFontSize(14)),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 20),
+                                    child: Text(
+                                      '买币',
+                                      style: TextStyle(fontSize: duSetFontSize(14)),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 5),
-                              child: Text(
-                                'SEPA; Visa/Master Card; IDeal',
-                                style: TextStyle(fontSize: duSetFontSize(12)),
+                                ],
                               ),
-                            )
-                          ],
+                              Container(
+                                margin: EdgeInsets.only(top: 5),
+                                child: Text(
+                                  'SEPA; Visa/Master Card; IDeal',
+                                  style: TextStyle(fontSize: duSetFontSize(12)),
+                                ),
+                              )
+                            ],
+                          ),
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(EdgeInsets.fromLTRB(10, 10, 10, 10)),
+                            elevation: MaterialStateProperty.all(0.0),
+
+                            // textStyle: MaterialStateProperty.all(TextStyle(fontSize: 20)),
+                            //高亮色，按钮处于focused, hovered, or pressed时的颜色
+                            overlayColor:
+                            MaterialStateProperty.all(context.isDark ? Color(0xff444444) : Color(0xffe7e7e8)),
+                            foregroundColor:
+                            MaterialStateProperty.all(context.isDark ? Color(0xffe7e7e8) : Color(0xff181818)),
+                            backgroundColor:
+                            MaterialStateProperty.all(context.isDark ? Color(0xff101418) : Colors.white),
+                            side: MaterialStateProperty.all(
+
+                              // BorderSide(
+                              //   width: 2,
+                              //   color: Colors.red,
+                              // ),
+                                BorderSide.none),
+                            /*shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),*/
+                          ),
+
                         ),
                       ),
                     ),
@@ -430,41 +434,69 @@ class _FundsPages3State extends State<FundsPages3>
                     ),
                     Expanded(
                       child: Container(
-                        color: context.isDark ? Color(0xff101418) : Colors.white,
-                        padding: EdgeInsets.fromLTRB(15, 10, 15, 10),
                         margin: EdgeInsets.only(top: 10, bottom: 10),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Row(
-                              // 垂直 主轴（横向） 的排列方式
-                              children: <Widget>[
-                                SizedBox(
-                                  //svg 直接使用android svg图
-                                  child: AvdPicture.asset(
-                                    'assets/images/ic_credit_card.xml',
+                        child: OutlinedButton(
+                          onPressed: () {
+                            print('-------------------------');
+                          },
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Row(
+                                // 垂直 主轴（横向） 的排列方式
+                                children: <Widget>[
+                                  SizedBox(
+                                    //svg 直接使用android svg图
+                                    child: AvdPicture.asset(
+                                      'assets/images/ic_credit_card.xml',
+                                    ),
+                                    height: 36.h,
+                                    width: 36.w,
                                   ),
-                                  height: 36.h,
-                                  width: 36.w,
-                                ),
-                                Container(
-                                  margin: EdgeInsets.only(left: 20),
-                                  child: Text(
-                                    '卖币',
-                                    style: TextStyle(fontSize: duSetFontSize(14)),
+                                  Container(
+                                    margin: EdgeInsets.only(left: 20),
+                                    child: Text(
+                                      '卖币',
+                                      style: TextStyle(fontSize: duSetFontSize(14)),
+                                    ),
                                   ),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(top: 5),
-                              child: Text(
-                                // '目前仅支持SEPA提现',
-                                'At present, only SEPA withdrawal is supported',
-                                style: TextStyle(fontSize: duSetFontSize(12)),
+                                ],
                               ),
-                            )
-                          ],
+                              Container(
+                                margin: EdgeInsets.only(top: 5),
+                                child: Text(
+                                  // '目前仅支持SEPA提现',
+                                  'At present, only SEPA withdrawal is supported',
+                                  style: TextStyle(fontSize: duSetFontSize(12)),
+                                ),
+                              )
+                            ],
+                          ),
+                          style: ButtonStyle(
+                            padding: MaterialStateProperty.all(EdgeInsets.fromLTRB(10, 10, 10, 10)),
+                            elevation: MaterialStateProperty.all(0.0),
+
+                            // textStyle: MaterialStateProperty.all(TextStyle(fontSize: 20)),
+                            //高亮色，按钮处于focused, hovered, or pressed时的颜色
+                            overlayColor:
+                                MaterialStateProperty.all(context.isDark ? Color(0xff444444) : Color(0xffe7e7e8)),
+                            foregroundColor:
+                                MaterialStateProperty.all(context.isDark ? Color(0xffe7e7e8) : Color(0xff181818)),
+                            backgroundColor:
+                                MaterialStateProperty.all(context.isDark ? Color(0xff101418) : Colors.white),
+                            side: MaterialStateProperty.all(
+
+                                // BorderSide(
+                                //   width: 2,
+                                //   color: Colors.red,
+                                // ),
+                                BorderSide.none),
+                            /*shape: MaterialStateProperty.all(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),*/
+                          ),
                         ),
                       ),
                     )
@@ -557,7 +589,9 @@ class _FundsPages3State extends State<FundsPages3>
                     ExchangeBalancePage(
                       btcValue: btcValue,
                       usdValue: usdValue,
-                      showPercentCheckBoxKey: _showPercentCheckBoxKey,
+                      // showPercentCheckBoxKey: _showPercentCheckBoxKey,
+                      data: accounts,
+                      price_list: price_list,
                     ),
                   ),
                   NestedScrollViewInnerScrollPositionKeyWidget(
@@ -608,15 +642,25 @@ class _FundsPages3State extends State<FundsPages3>
       print('---------------------------  membersMe 请求 -------------------------');
 
       var fundsEntity = await OceanApi.membersMe(context: context);
-
+      // 总金额
       Decimal totalEquivalentBtc = Decimal.fromInt(0);
 
       fundsEntity.accounts?.forEach((element) {
-        //累加
+        //累加 无进度损失
         totalEquivalentBtc = NumUtil.addDecStr(totalEquivalentBtc.toString(), element.btcEquivalentBalance!);
       });
 
-      print('===值 ${totalEquivalentBtc.toString()}');
+      // print('===值 ${totalEquivalentBtc.toString()}');
+
+      var index = fundsEntity.accounts?.indexWhere((element) {
+        return element.type == 'fiat';
+      });
+
+      var removeAt = fundsEntity.accounts?.removeAt(index!);
+
+      fundsEntity.accounts?.insert(0, removeAt!);
+
+      accounts = fundsEntity.accounts;
 
       setState(() {
         //直接截取8位，不四舍五入
@@ -632,7 +676,7 @@ class _FundsPages3State extends State<FundsPages3>
 
             if (legalRate != null) {
               var totalBtcUsPrice = NumUtil.multiplyDecStr(usPrice.toString(), legalRate.rate!);
-
+              // 截取两位
               var formartNum2 = formartNum(totalBtcUsPrice.toString(), 2, isCrop: true);
 
               usdValue = formartNum2.toString() + Constant.current_LegalTender;
@@ -646,18 +690,25 @@ class _FundsPages3State extends State<FundsPages3>
       return Future.value(true);
     } catch (e) {
       print("请求异常=== $e");
-      return Future.value(true);
+      return Future.value(false);
     }
   }
 }
 
+///================底下的 listview =====================================================================================================
 class ExchangeBalancePage extends StatefulWidget {
   final String btcValue;
   final String usdValue;
-  final GlobalKey showPercentCheckBoxKey;
+  final List<Account>? data;
+  final List<PriceEntity> price_list;
 
+  bool isFilterSmall = false;
+  bool isShowPercent = false;
+
+  List<Account>? filter_Data;
   Widget divider1 = Divider(
-    height: 2.w,
+    height: 0.0,
+    thickness: 2,
     color: Color(0xfff4f5f7),
   );
 
@@ -665,24 +716,51 @@ class ExchangeBalancePage extends StatefulWidget {
     color: Colors.transparent,
   );
 
-  ExchangeBalancePage({Key? key, required this.btcValue, required this.usdValue, required this.showPercentCheckBoxKey})
-      : super(key: key);
+  ExchangeBalancePage({
+    Key? key,
+    required this.btcValue,
+    required this.usdValue,
+    required this.data,
+    required this.price_list,
+  }) : super(key: key) {
+    filter_Data = data;
+  }
 
   @override
   _ExchangeBalancePageState createState() => _ExchangeBalancePageState();
 }
 
 class _ExchangeBalancePageState extends State<ExchangeBalancePage> {
-  bool invisibleChecked = true;
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  void filterSmall(bool isHideSmall) {
+    if (isHideSmall) {
+      var where = widget.data?.where((element) {
+        var bool = Decimal.parse(element.btcEquivalentBalance!) > Decimal.parse('0.0001');
+        return bool;
+      });
+
+      widget.filter_Data = where?.toList();
+    } else {
+      widget.filter_Data = widget.data;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-
+    var length = 4;
+    if (widget.filter_Data != null) {
+      length = widget.filter_Data!.length + 4;
+    }
 
     return ListView.separated(
       padding: EdgeInsets.zero,
       physics: const ClampingScrollPhysics(),
       itemBuilder: (context, index) {
+        /// 币币总资产
         if (index == 0) {
           return Padding(
             padding: EdgeInsets.fromLTRB(15.w, 10.h, 0, 0.h),
@@ -733,15 +811,19 @@ class _ExchangeBalancePageState extends State<ExchangeBalancePage> {
             color: context.isDark ? Color(0xff000000) : Color(0xfff4f5f7),
           );
         } else if (index == 3) {
+          /// 隐藏小额 百分比
           return Row(
             children: <Widget>[
               Padding(
                 padding: EdgeInsets.only(left: 5.w),
                 child: Checkbox(
-                  value: invisibleChecked,
+                  // key: widget.checkBoxKey,
+                  value: widget.isFilterSmall,
                   onChanged: (value) {
                     setState(() {
-                      invisibleChecked = value!;
+                      widget.isFilterSmall = value!;
+
+                      filterSmall(widget.isFilterSmall);
                     });
                   },
                 ),
@@ -770,36 +852,145 @@ class _ExchangeBalancePageState extends State<ExchangeBalancePage> {
 
               Padding(
                 padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0),
-                child: MyCheckbox((value) {
-                  print('===== 选中了么 $value');
-                }, widget.showPercentCheckBoxKey),
+                child: MyCheckbox(
+                  value: widget.isShowPercent,
+                  onChange: (value) {
+                    setState(() {
+                      widget.isShowPercent = value!;
+                    });
+                  },
+                ),
               ),
             ],
           );
         } else {
+          var newIndex = index - 4;
+
+          var balance = widget.filter_Data?[newIndex].balance;
+          var locked = widget.filter_Data?[newIndex].locked;
+          var btc_equivalent_balance = widget.filter_Data?[newIndex].btcEquivalentBalance;
+
+          // 每一种币 多少数量
+          var mTvAssetAmount = '';
+          if (balance != null && locked != null) {
+            // 锁住的也要加进来
+            var availableTotal = NumUtil.addDecStr(balance, locked);
+            // 截取8位
+            var formartNum2 = formartNum(availableTotal.toString(), 8, isCrop: true);
+            //按照3位分割一个逗号
+            // mTvAssetAmount = TextUtil.formatComma3(formartNum2);
+            mTvAssetAmount = formartNum2;
+          }
+
+          /// 多少美元
+          var mTvUsPrivce = '';
+          var usPrice;
+
+          for (var element in widget.price_list) {
+            if (element.id == 'btc_usdt') {
+              //
+              usPrice = NumUtil.multiplyDecStr(btc_equivalent_balance!, element.rate);
+
+              break;
+            }
+          }
+
+          //法币汇率
+          var legalRate = Constant.findLegalTenders(Constant.current_LegalTender);
+
+          if (legalRate != null) {
+            var multiplyDecStr = NumUtil.multiplyDecStr(usPrice.toString(), legalRate.rate!);
+
+            mTvUsPrivce = formartNum(multiplyDecStr.toString(), 2, isCrop: true) + " " + Constant.current_LegalTender;
+          }
+
+          /// 百分比
+          var multiplyDecStr2 = NumUtil.multiplyDecStr(btc_equivalent_balance!, '100');
+
+          var percent = NumUtil.divideDecStr(multiplyDecStr2.toString(), widget.btcValue);
+
+          var percentWith2Digital = formartNum(percent.toString(), 2, isCrop: true);
+
+          /// 具体的item
           return Container(
-            padding: EdgeInsets.fromLTRB(15.w, 10.w, 15.w, 0.w),
+            height: 50.h,
+            // padding:EdgeInsets.fromLTRB(15.w, 10.w, 15.w, 0.w),
+            margin: EdgeInsets.fromLTRB(15.w, 10.w, 15.w, 0.w),
             child: Column(
               children: <Widget>[
                 Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
-                    Text('USD\$'),
+                    // 币种
+                    widget.filter_Data?[newIndex].type == 'fiat'
+                        ? Padding(
+                            padding: EdgeInsets.only(top: 1.w),
+                            child: Text(
+                              '${widget.filter_Data?[newIndex].currency?.toUpperCase()} \$',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                color: Color(0xffff8b2c),
+                              ),
+                            ),
+                          )
+                        : Center(
+                            child: Padding(
+                              padding: EdgeInsets.only(top: 1.w),
+                              child: Text(
+                                '${widget.filter_Data?[newIndex].currency?.toUpperCase()}',
+                                style: TextStyle(
+                                  fontSize: 16.sp,
+                                  color: context.isDark ? Color(0xffe7e7e8) : Color(0xff181818),
+                                ),
+                              ),
+                            ),
+                          ),
                     Expanded(
                       child: SizedBox(
                         height: 10,
                       ),
                     ),
-                    Text(
-                      '0.0000000000',
-                      style: TextStyle(fontSize: 14.sp),
+
+                    ///
+                    Visibility(
+                      visible: widget.isShowPercent,
+                      // visible 是false的时候 显示replacement
+                      replacement: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: <Widget>[
+                          //数量
+                          Text(
+                            mTvAssetAmount,
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w500,
+                              color: context.isDark ? Color(0xffe7e7e8) : Color(0xff181818),
+                            ),
+                          ),
+                          // 价格
+                          Container(
+                            padding: EdgeInsets.symmetric(vertical: 2.w),
+                            alignment: AlignmentDirectional.centerEnd,
+                            child: Text(mTvUsPrivce),
+                          )
+                        ],
+                      ),
+                      child: Container(
+                        alignment: Alignment.centerRight,
+                        height: 50.h,
+                        width: 100,
+                        // color:Colors.deepOrange,
+                        child: Text(
+                          percentWith2Digital + " %",
+                          style: TextStyle(
+                            fontSize: 14.sp,
+                            color: context.isDark ? Color(0xffe7e7e8) : Color(0xff181818),
+                          ),
+                        ),
+                      ),
                     ),
                   ],
                 ),
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 5.w),
-                  alignment: AlignmentDirectional.centerEnd,
-                  child: Text('0.0000000000'),
-                )
               ],
             ),
           );
@@ -818,42 +1009,12 @@ class _ExchangeBalancePageState extends State<ExchangeBalancePage> {
           return widget.divider1;
         }
       },
-      itemCount: 120,
+      itemCount: length,
     );
-
-    /*return ListView.builder(
-      //store Page state
-      key: const PageStorageKey<String>('Tab0'),
-      physics: const ClampingScrollPhysics(),
-      itemBuilder: (BuildContext c, int i) {
-        return Container(
-          alignment: Alignment.center,
-          height: 60.0,
-          child: Text(const Key('Tab0').toString() + ': ListView$i of '),
-        );
-      },
-      itemCount: 120,
-      padding: const EdgeInsets.all(0.0),
-    );*/
-
-    /*Widget redDivider = Divider(color: Colors.red);
-    Widget blueDivider = Divider(color: Colors.blue);
-
-    return ListView.separated(
-      padding: EdgeInsets.all(0),
-
-      itemCount: 50,
-      //判断奇偶数进行分割线颜色处理
-      separatorBuilder: (BuildContext context, int index){
-        return index % 2 == 0 ? redDivider:blueDivider;
-      },
-      itemBuilder: (BuildContext context, int index){
-        return ListTile(title: Text("我是列表$index"),);
-      },
-    );*/
   }
 }
 
+///=====================================================================================================================
 class StickyTabBarDelegate extends SliverPersistentHeaderDelegate {
   final PreferredSize child;
 

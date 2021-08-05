@@ -7,6 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:ocean_exchange_flutter/common/model/funds_entity.dart';
 import 'package:ocean_exchange_flutter/common/model/legal_tenders_entity.dart';
 import 'package:ocean_exchange_flutter/common/model/login_response.dart';
+import 'package:ocean_exchange_flutter/common/model/profile_entity.dart';
 import 'package:ocean_exchange_flutter/common/model/verifycode_response.dart';
 import 'package:ocean_exchange_flutter/global/url_constant.dart';
 import 'package:ocean_exchange_flutter/res/constant.dart';
@@ -161,6 +162,27 @@ class OceanApi {
 
     return LegalTendersEntity.fromJson(response);
   }
+
+  ///
+  /// 登录成功之后，获取sn标签
+  ///
+  static Future<ProfileEntity> getMembersProfile({
+    required BuildContext context,
+    Object? params,
+  }) async {
+    var options = Options(headers: {'Authorization': "Bearer ${Constant.TOKEN}"});
+
+    var response = await HttpUtil().get(
+      '${getEngineApiHost()}members/profile',
+      context: context,
+      params: params,
+      options: options,
+    );
+    // print('======='+response.toString());
+
+    return ProfileEntity.fromJson(response);
+  }
+
 
 
 

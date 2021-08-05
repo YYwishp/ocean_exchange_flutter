@@ -125,7 +125,7 @@ class _NavigationBarPageViewState extends State<NavigationBarPageView> {
   @override
   Widget build(BuildContext context) {
 
-
+    /// =============== 请求法币的汇率
     OceanApi.legalTenders(context: context).then((value){
       print('----$value');
 
@@ -213,7 +213,22 @@ class _NavigationBarPageViewState extends State<NavigationBarPageView> {
       Navigator.pushNamed(context, Routes.loginPage);
 
     }else{
+
+
+
+
       _pageController.jumpToPage(index);
+
+      if(index == 4){
+        if (Constant.isLogin()) {
+
+
+          requestMembersProfile();
+
+        }
+      }
+
+
     }
 
 
@@ -222,6 +237,19 @@ class _NavigationBarPageViewState extends State<NavigationBarPageView> {
 
 
   }
+
+  Future<void> requestMembersProfile() async {
+    print('=========请求开始===============');
+    var membersProfile = await OceanApi.getMembersProfile(context: context);
+
+    if(membersProfile.sn!=null){
+      SpUtil.putString(Constant.sn, membersProfile.sn!);
+    }
+
+  }
+
+
+
 }
 
 

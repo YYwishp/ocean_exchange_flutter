@@ -7,6 +7,7 @@ import 'package:ocean_exchange_flutter/page/animation/SimpleAnimation5.dart';
 import 'package:ocean_exchange_flutter/page/animation/manual_animation1.dart';
 import 'package:ocean_exchange_flutter/page/animation/manual_animation2.dart';
 import 'package:ocean_exchange_flutter/page/animation/manual_animation3.dart';
+import 'package:ocean_exchange_flutter/page/funds/buycoin/buy_coin_list.dart';
 import 'package:ocean_exchange_flutter/page/login/captcha/captcha_page.dart';
 import 'package:ocean_exchange_flutter/page/login/captcha/verify_code_page.dart';
 import 'package:ocean_exchange_flutter/page/login/login_page.dart';
@@ -35,6 +36,7 @@ class Routes{
   static const ManualAnimation1 = '/ManualAnimation1';
   static const ManualAnimation2 = '/ManualAnimation2';
   static const ManualAnimation3 = '/ManualAnimation3';
+  static const BuyCoinListPage = '/BuyCoinListPage';
 
 }
 
@@ -58,6 +60,7 @@ final _routes = {
   Routes.ManualAnimation1: (context,{arguments}) => ManualAnimation1(),
   Routes.ManualAnimation2: (context,{arguments}) => ManualAnimation2(),
   Routes.ManualAnimation3: (context,{arguments}) => ManualAnimation3(),
+  Routes.BuyCoinListPage: (context,{arguments}) => BuyCoinListPage(),
 
 
 

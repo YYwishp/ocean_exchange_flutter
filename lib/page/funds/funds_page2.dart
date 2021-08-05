@@ -410,8 +410,6 @@ class _FundsPages2State extends State<FundsPages2> with AutomaticKeepAliveClient
 
                         controller: tabController,
 
-
-
                         tabs: [
                           Tab(
                             child: Text(
@@ -792,12 +790,12 @@ class _ExchangeBalancePageState extends State<ExchangeBalancePage> {
                 ),
               ),
 
-              Padding(
+             /* Padding(
                 padding: EdgeInsets.fromLTRB(10.w, 0, 10.w, 0),
                 child: MyCheckbox((value) {
                   print('===== 选中了么 $value');
                 }, widget.showPercentCheckBoxKey),
-              ),
+              ),*/
             ],
           );
         } else {
@@ -810,20 +808,17 @@ class _ExchangeBalancePageState extends State<ExchangeBalancePage> {
         }
       },
       separatorBuilder: (context, index) {
-        if(index ==0){
-
+        if (index == 0) {
           return widget.divider2;
-        }else if(index == 1){
+        } else if (index == 1) {
           return widget.divider2;
-        }else if(index == 2){
+        } else if (index == 2) {
           return widget.divider2;
-        }else if(index == 3){
+        } else if (index == 3) {
           return widget.divider2;
-        }else{
+        } else {
           return widget.divider1;
         }
-
-
       },
       itemCount: 120,
     );
